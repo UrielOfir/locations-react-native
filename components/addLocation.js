@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Button } from 'react-native';
+import { View, TextInput, Button } from 'react-native';
 import axios from 'axios';
 
 import generateData from '../middleware/generateData';
 import globalStyles from '../style'
 
 function submit(data) {
-  axios.post('https://6c3d7336c57002.lhr.domains/api/userUpdates', { name: data.alertText, longitude: data.long , latitude: data.lat })
+  axios.post('https://d64f57c296fd03.lhr.domains/api/userUpdates', { name: data.alertText, longitude: data.long , latitude: data.lat })
     .then(function (response) {
       // handle success
       console.log("req sent", response);
@@ -24,14 +24,9 @@ export default function AddLocation() {
   [lat, setLat] = useState(0);
   [long, setLong] = useState(0);
   [alertText, setAlertText] = useState('');
-  // lat, long, alert
-
-  const changeHandler = (val, set) => {
-    set(val);
-    console.log(lat);
-  };
 
   function generateLocalData() {
+    console.log("hi")
     setLat(generateData().latitude);
     setLong(generateData().longitude);
     setAlertText(generateData().name);
@@ -40,21 +35,21 @@ export default function AddLocation() {
   return (
     <View>
       <TextInput
-        style={styles.input}
+        style={globalStyles.input}
         placeholder='latitude'
-        onChangeText={val => changeHandler(val, setLat)}
+        onChangeText={val => setLat(val)}
         value={lat.toString()}
       />
       <TextInput
-        style={styles.input}
+        style={globalStyles.input}
         placeholder='longitude'
-        onChangeText={val => changeHandler(val, setLong)}
+        onChangeText={val => setLong(val)}
         value={long.toString()}
       />
       <TextInput
-        style={styles.input}
+        style={globalStyles.input}
         placeholder='alert'
-        onChangeText={val => changeHandler(val, setAlertText)}
+        onChangeText={val => setAlertText(val)}
         value={alertText}
       />
       <View style={globalStyles.button}>
@@ -67,13 +62,3 @@ export default function AddLocation() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    marginBottom: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-});
