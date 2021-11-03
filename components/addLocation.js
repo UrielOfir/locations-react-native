@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { View, TextInput, Button } from 'react-native';
 import axios from 'axios';
 
-import generateData from '../middleware/generateData';
+import { ngrok } from '../assets/apiData'
+import generateData from '../services/generateData';
 import globalStyles from '../style'
 
 function submit(data) {
-  axios.post('https://d64f57c296fd03.lhr.domains/api/userUpdates', { name: data.alertText, longitude: data.long , latitude: data.lat })
+  axios.post(`${ngrok}/api/userUpdates`, { name: data.alertText, longitude: data.long , latitude: data.lat })
     .then(function (response) {
       // handle success
-      console.log("req sent", response);
+      console.log("req sent", response.data);
     })
     .catch(function (error) {
       // handle error
@@ -21,12 +22,11 @@ function submit(data) {
 }
 
 export default function AddLocation() {
-  [lat, setLat] = useState(0);
-  [long, setLong] = useState(0);
-  [alertText, setAlertText] = useState('');
+  const [lat, setLat] = useState(0);
+  const [long, setLong] = useState(0);
+  const [alertText, setAlertText] = useState('');
 
   function generateLocalData() {
-    console.log("hi")
     setLat(generateData().latitude);
     setLong(generateData().longitude);
     setAlertText(generateData().name);

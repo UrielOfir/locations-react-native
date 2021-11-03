@@ -1,0 +1,1 @@
+export const ngrok ="http://94b5-62-90-112-77.ngrok.io"

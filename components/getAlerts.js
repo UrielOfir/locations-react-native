@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { FlatList, Text, View, TextInput, Button } from 'react-native';
 import axios from 'axios';
 
-import generateData from '../middleware/generateData';
+import { ngrok } from '../assets/apiData'
+import generateData from '../services/generateData';
 import globalStyles from '../style'
 
-async function submit(data) {
-    return axios.post('https://d64f57c296fd03.lhr.domains/api/adminReq', {
+async function submit(data, set) {
+    console.log(ngrok);
+    const response = await axios.post(`${ngrok}/api/adminReq`, {
         radius: data.radius,
         longitude: data.long,
         latitude: data.lat
     }).then(function (response) {
         // handle success
-        console.log("sumbit:",response.data);
-        return JSON.stringify(response.data);
+        console.log("sumbit:", response.data);
+        set(response.data)
     })
         .catch(function (error) {
             // handle error
@@ -22,15 +24,16 @@ async function submit(data) {
         .then(function () {
             // always executed
         });
+    return response;
 }
 
 export default function GetAlerts() {
-    [lat, setLat] = useState(0);
-    [long, setLong] = useState(0);
-    [radius, setRadius] = useState('');
+    const [lat, setLat] = useState(0);
+    const [long, setLong] = useState(0);
+    const [radius, setRadius] = useState('');
+    const [list, setList] = useState([]);
 
     function generateLocalData() {
-        console.log("hi")
         setLat(generateData().latitude);
         setLong(generateData().longitude);
         setRadius(generateData().radius);
@@ -61,8 +64,16 @@ export default function GetAlerts() {
             </View>
             <View style={globalStyles.button} >
                 <Button color='coral'
-                    onPress={() => {submit({ radius, lat, long }) }}
+                    onPress={() => { submit({ radius, lat, long }, setList) }}
                     title='Get Alerts' />
+            </View>
+            
+            <View>
+                <Text style={globalStyles.input}>The locations in your radius are here:</Text>
+                <FlatList
+                    data={list}
+                    renderItem={({ item }) => <Text style={globalStyles.input}>{item}</Text>}
+                />
             </View>
         </View >
     );
