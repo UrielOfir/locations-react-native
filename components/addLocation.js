@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button } from 'react-native';
-import axios from 'axios';
 import {addAlert} from '../services/redis'
 
-import { ngrok } from '../assets/apiData'
 import generateData from '../services/generateData';
 import globalStyles from '../style'
 

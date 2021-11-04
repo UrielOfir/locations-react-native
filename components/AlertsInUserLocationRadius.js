@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { FlatList, Text, View, TextInput, Button } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import { PermissionsAndroid } from 'react-native';
 
-import { getAlertsInRadius } from '../services/redis'
-import { getUserLocation } from '../services/getUserLocation'
+import { getAlertsInRadius } from '../services/redis';
 import globalStyles from '../style';
 
-/*
-TODO: 
-1. copy the component of getAlerts
-*/
 
 async function getAlerts(data, set) {
     set(await getAlertsInRadius(data))
@@ -19,11 +16,16 @@ export default function AlertsInUserLocationRadius() {
     const [radius, setRadius] = useState('');
     const [list, setList] = useState([]);
 
-
-    getUserLocation().then((res) => {
-        setLat(res.coords.latitude);
-        setLong(res.coords.longitude);
-    });
+    //TODO: check this thing
+    if (PermissionsAndroid.RESULTS.GRANTED == "granted") {
+        Geolocation.watchPosition(
+            (position) => {
+                console.log(position.coords);
+                setLat(position.coords.latitude);
+                setLong(position.coords.longitude);
+            }
+        )
+    }
 
 
     return (

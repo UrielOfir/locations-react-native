@@ -1,7 +1,4 @@
-//TODO: get here the axios request method of add location and get_alerts
-
 import axios from 'axios';
-import { LocalTile } from 'react-native-maps';
 import { ngrok } from '../assets/apiData';
 
 export { getAlertsInRadius , addAlert}

@@ -13,8 +13,6 @@ requestLocationPermission();
 export default function App() {
   const [componentSwitch, setComponentSwitch] = useState(null);
 
-
-  //TODO: add button to userlocation component
   renderComponentSwitch = () => {
     if (!componentSwitch) {
       return <View>
@@ -56,6 +54,7 @@ export default function App() {
       <View style={styles.container}>
         <Header />
         <View style={styles.content}>
+          <AlertsInUserLocationRadius />
           {renderComponentSwitch()}
         </View>
       </View>
