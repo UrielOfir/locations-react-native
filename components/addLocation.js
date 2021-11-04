@@ -1,24 +1,14 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button } from 'react-native';
 import axios from 'axios';
+import {addAlert} from '../services/redis'
 
 import { ngrok } from '../assets/apiData'
 import generateData from '../services/generateData';
 import globalStyles from '../style'
 
 function submit(data) {
-  axios.post(`${ngrok}/api/addAlert`, { name: data.alertText, longitude: data.long , latitude: data.lat })
-    .then(function (response) {
-      // handle success
-      console.log("req sent", response.data);
-    })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .then(function () {
-      // always executed
-    });
+  addAlert(data)
 }
 
 export default function AddLocation() {

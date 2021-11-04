@@ -4,7 +4,7 @@ import axios from 'axios';
 import { LocalTile } from 'react-native-maps';
 import { ngrok } from '../assets/apiData';
 
-export { getAlertsInRadius }
+export { getAlertsInRadius , addAlert}
 
 const getAlertsInRadius = async ({ radius, long, lat }) => {
     console.log(radius, long, lat);
@@ -14,6 +14,18 @@ const getAlertsInRadius = async ({ radius, long, lat }) => {
         latitude: lat
     })
     return response.data;
+}
+
+const addAlert = ({ alertText, long, lat }) => {
+    axios.post(`${ngrok}/api/addAlert`, { name: alertText, longitude: long, latitude: lat })
+        .then(function (response) {
+            // handle success
+            console.log("req to add alert sent: ", response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
 }
 
 
