@@ -1,40 +1,42 @@
 import React, { useState } from 'react';
 import { FlatList, Text, View, TextInput, Button } from 'react-native';
-import {getAlertsInRadius} from '../services/redis'
 
-import generateData from '../services/generateData';
+import { getAlertsInRadius } from '../services/redis'
+import { getUserLocation } from '../services/getUserLocation'
 import globalStyles from '../style';
 
+/*
+TODO: 
+1. copy the component of getAlerts
+*/
 
 async function getAlerts(data, set) {
     set(await getAlertsInRadius(data))
 }
-
-export default function GetAlerts() {
-    
-    const [lat, setLat] = useState(0);
-    const [long, setLong] = useState(0);
+export default function AlertsInUserLocationRadius() {
+    const [lat, setLat] = useState();
+    const [long, setLong] = useState();
     const [radius, setRadius] = useState('');
     const [list, setList] = useState([]);
 
-    function generateLocalData() {
-        setLat(generateData().latitude);
-        setLong(generateData().longitude);
-        setRadius(generateData().radius);
-    }
+
+    getUserLocation().then((res) => {
+        setLat(res.coords.latitude);
+        setLong(res.coords.longitude);
+    });
+
 
     return (
         <View>
-            <TextInput style={globalStyles.input}
-                placeholder='latitude'
-                onChangeText={val => setLat(val)}
-                value={lat.toString()}
-            />
-            <TextInput style={globalStyles.input}
-                placeholder='longitude'
-                onChangeText={val => setLong(val)}
-                value={long.toString()}
-            />
+            <Text style={globalStyles.input}>
+                Your position is:
+            </Text>
+            <Text style={globalStyles.input}>
+                lat: {lat}, long: {long}
+            </Text>
+            <Text style={globalStyles.input}>
+                Choose the radius to check alerts:
+            </Text>
             <TextInput style={globalStyles.input}
                 placeholder='radius'
                 onChangeText={val => setRadius(val)}
@@ -42,15 +44,9 @@ export default function GetAlerts() {
             />
             <View style={globalStyles.button} >
                 <Button color='coral'
-                    onPress={() => { generateLocalData() }}
-                    title='generete data' />
-
-            </View>
-            <View style={globalStyles.button} >
-                <Button color='coral'
                     onPress={() => { getAlerts({ radius, lat, long }, setList) }}
                     title='Get Alerts' />
-            </View>          
+            </View>
             <View>
                 <Text style={globalStyles.input}>The locations in your radius are here:</Text>
                 <FlatList
@@ -58,6 +54,6 @@ export default function GetAlerts() {
                     renderItem={({ item }) => <Text style={globalStyles.input}>{item}</Text>}
                 />
             </View>
-        </View >
-    );
+        </View>
+    )
 }

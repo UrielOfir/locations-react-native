@@ -7,7 +7,7 @@ import generateData from '../services/generateData';
 import globalStyles from '../style'
 
 function submit(data) {
-  axios.post(`${ngrok}/api/userUpdates`, { name: data.alertText, longitude: data.long , latitude: data.lat })
+  axios.post(`${ngrok}/api/addAlert`, { name: data.alertText, longitude: data.long , latitude: data.lat })
     .then(function (response) {
       // handle success
       console.log("req sent", response.data);
